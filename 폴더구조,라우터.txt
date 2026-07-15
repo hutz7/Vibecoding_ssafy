@@ -1,0 +1,177 @@
+src
+│
+├── assets
+│   ├── images
+│   ├── icons
+│   └── styles
+│
+├── components
+│
+│   ├── common
+│   │   ├── Header.vue
+│   │   ├── Footer.vue
+│   │   ├── SearchBar.vue
+│   │   ├── Pagination.vue
+│   │   ├── Loading.vue
+│   │   └── EmptyState.vue
+│   │
+│   ├── place
+│   │   ├── CategoryTabs.vue
+│   │   ├── PlaceCard.vue
+│   │   ├── PlaceInfo.vue
+│   │   └── FestivalInfo.vue
+│   │
+│   ├── board
+│   │   ├── BoardTable.vue
+│   │   ├── BoardItem.vue
+│   │   ├── BoardForm.vue
+│   │   └── PasswordModal.vue
+│   │
+│   └── chatbot
+│       ├── ChatButton.vue
+│       ├── ChatWindow.vue
+│       ├── ChatInput.vue
+│       └── ChatMessage.vue
+│
+├── views
+│   ├── HomeView.vue
+│   ├── PlaceView.vue
+│   ├── PlaceDetailView.vue
+│   ├── BoardView.vue
+│   ├── BoardDetailView.vue
+│   ├── BoardWriteView.vue
+│   ├── BoardEditView.vue
+│   └── NotFoundView.vue
+│
+├── router
+│   └── index.js
+│
+├── services
+│   ├── placeService.js
+│   ├── boardService.js
+│   ├── chatbotService.js
+│   └── localStorageService.js
+│
+├── composables
+│   ├── usePlace.js
+│   ├── useBoard.js
+│   └── useChat.js
+│
+├── stores
+│   ├── place.js
+│   ├── board.js
+│   └── chatbot.js
+│
+├── utils
+│   ├── constants.js
+│   ├── formatter.js
+│   ├── placeNormalizer.js
+│   ├── imageFallback.js
+│   └── search.js
+│
+├── public
+│   └── data
+│       ├── tourist.json
+│       ├── culture.json
+│       ├── festival.json
+│       ├── course.json
+│       ├── leports.json
+│       ├── hotel.json
+│       └── shopping.json
+│
+├── App.vue
+└── main.js
+3. 최종 Router 설계
+/
+
+↓
+
+Home
+
+────────────────────────────
+
+/places
+
+↓
+
+관광정보
+
+────────────────────────────
+
+/places/:category/:id
+
+↓
+
+관광 상세
+
+예)
+
+places/tourist/4077758
+
+places/festival/2556687
+
+places/hotel/3056929
+
+────────────────────────────
+
+/board
+
+↓
+
+게시판
+
+────────────────────────────
+
+/board/write
+
+↓
+
+글쓰기
+
+────────────────────────────
+
+/board/:id
+
+↓
+
+게시글 상세
+
+────────────────────────────
+
+/board/edit/:id
+
+↓
+
+게시글 수정
+
+────────────────────────────
+
+*
+
+↓
+
+404
+Router 구조
+App.vue
+
+│
+
+Vue Router
+
+│
+
+├── Home
+
+├── Place
+
+│      └── PlaceDetail
+
+├── Board
+
+│      ├── BoardDetail
+
+│      ├── BoardWrite
+
+│      └── BoardEdit
+
+└── NotFound

@@ -1,0 +1,212 @@
+4. JSON 데이터 구조 분석
+4.1 데이터 구성
+파일	카테고리	데이터 수
+tourist.json	관광지	783
+culture.json	문화시설	566
+festival.json	축제·공연	201
+course.json	여행코스	51
+leports.json	레포츠	126
+hotel.json	숙박	423
+shopping.json	쇼핑	4,368
+합계	7개 카테고리	6,518건
+4.2 JSON 구조
+{
+  "region":"서울",
+  "contentType":"관광지",
+  "contentTypeId":"12",
+  "total":783,
+  "items":[]
+}
+
+실제 화면에서는
+
+items
+
+배열만 사용한다.
+
+4.3 공통 필드
+필드	설명	사용 화면
+contentid	고유 ID	상세
+contenttypeid	카테고리	목록·상세
+title	제목	목록·상세
+addr1	주소	목록·상세
+addr2	상세주소	상세
+firstimage	대표 이미지	카드·상세
+firstimage2	보조 이미지	상세
+tel	전화번호	상세
+zipcode	우편번호	상세
+mapx	경도	내부 저장
+mapy	위도	내부 저장
+4.4 카테고리 구조
+전체
+
+├── 관광지
+
+├── 문화시설
+
+├── 축제
+
+├── 여행코스
+
+├── 레포츠
+
+├── 숙박
+
+└── 쇼핑
+
+카테고리는
+
+contentTypeId
+
+기준으로 분류한다.
+
+4.5 데이터 정규화
+JSON
+
+↓
+
+placeService
+
+↓
+
+placeNormalizer
+
+↓
+
+Place 객체
+
+↓
+
+Store
+
+↓
+
+View
+
+정규화 모델
+
+{
+ id,
+ contentTypeId,
+ category,
+ categoryName,
+ title,
+ address,
+ fullAddress,
+ phone,
+ image,
+ longitude,
+ latitude,
+ event,
+ searchableText
+}
+4.6 데이터 처리 흐름
+JSON 7개
+
+↓
+
+fetch()
+
+↓
+
+placeService
+
+↓
+
+placeNormalizer
+
+↓
+
+Pinia Store
+
+↓
+
+검색
+
+↓
+
+페이지네이션
+
+↓
+
+PlaceCard 출력
+4.7 검색
+
+검색 대상
+
+제목
+주소
+카테고리
+축제 장소
+축제 프로그램
+
+게시판 검색
+
+제목
+내용
+4.8 데이터 예외 처리
+예외	처리 방식
+이미지 없음	카테고리별 기본 이미지
+주소 없음	"주소 정보 없음" 표시
+여행코스 주소 없음	"서울 지역 여행코스" 표시
+전화번호 없음	항목 숨김
+HTTP 이미지	HTTPS 변환
+축제 데이터	조건부 렌더링
+4.9 챗봇 데이터 흐름
+사용자 질문
+
+↓
+
+브라우저 검색
+
+↓
+
+관련 관광정보 5~10건 추출
+
+↓
+
+Netlify Function
+
+↓
+
+OpenAI API
+
+↓
+
+답변 생성
+5. 최종 시스템 데이터 흐름
+서울 공공데이터(JSON 7종)
+            │
+            ▼
+     public/data/*.json
+            │
+            ▼
+      placeService.js
+            │
+            ▼
+    placeNormalizer.js
+            │
+            ▼
+      Pinia PlaceStore
+            │
+            ├───────────────┐
+            │               │
+            ▼               ▼
+       HomeView        PlaceView
+            │               │
+            └──────┬────────┘
+                   ▼
+          PlaceDetailView
+                   │
+        관련 데이터 추출(5~10건)
+                   │
+                   ▼
+         Netlify Functions
+                   │
+                   ▼
+             OpenAI API
+                   │
+                   ▼
+              ChatBot UI
+
+이 설계는 RFP 요구사항, MVP 정의서, **실제 서울 JSON 데이터 구조(6,518건)**를 모두 반영한 최종안이며, 구현 난이도와 확장성을 고려한 Vue 3 + Vite 기반의 구조입니다. 발표 자료의 UI 설계 → 폴더 구조 → 라우터 → JSON 구조 분석 → 시스템 흐름도 순서로 사용하면 자연스럽게 설명할 수 있습니다.
