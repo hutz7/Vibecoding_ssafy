@@ -1,27 +1,30 @@
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+function moveCategory(category) {
+  router.push({
+    path: "/places",
+    query: {
+      category,
+    },
+  });
+}
+</script>
+
 <template>
   <section class="category">
+  <h2>서울 관광 카테고리</h2>
 
-    <h2>서울 관광 카테고리</h2>
-
-    <div class="grid">
-
-      <div class="card">🏞 관광지</div>
-
-      <div class="card">🏛 문화시설</div>
-
-      <div class="card">🎉 축제</div>
-
-      <div class="card">🛍 쇼핑</div>
-
-      <div class="card">🏨 숙박</div>
-
-      <div class="card">🚴 레포츠</div>
-
-      <div class="card">🗺 여행코스</div>
-
-    </div>
-
-  </section>
+  <div class="card" @click="moveCategory('tourist')">🏞 관광지</div>
+  <div class="card" @click="moveCategory('culture')">🏛 문화시설</div>
+  <div class="card" @click="moveCategory('festival')">🎉 축제</div>
+  <div class="card" @click="moveCategory('shopping')">🛍 쇼핑</div>
+  <div class="card" @click="moveCategory('hotel')">🏨 숙박</div>
+  <div class="card" @click="moveCategory('leports')">🚴 레포츠</div>
+  <div class="card" @click="moveCategory('course')">🗺 여행코스</div>
+ </section>
 </template>
 
 <style scoped>
