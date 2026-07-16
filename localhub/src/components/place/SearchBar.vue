@@ -23,13 +23,14 @@ const placeStore = usePlaceStore();
 input {
   width: 100%;
   padding: 15px;
-  border: 1px solid #ddd;
   border-radius: 10px;
+  border: 1px solid #ddd;
   font-size: 16px;
-  outline: none;
 }
 
 input:focus {
   border-color: #1976d2;
+  outline: none;
 }
+
 </style>
