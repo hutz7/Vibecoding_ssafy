@@ -1,18 +1,14 @@
-<<script setup>
+<script setup>
+import { usePlaceStore } from "@/stores/place";
 import PlaceCard from "./PlaceCard.vue";
 
-defineProps({
-  places: {
-    type: Array,
-    default: () => [],
-  },
-});
+const placeStore = usePlaceStore();
 </script>
 
 <template>
   <div class="grid">
     <PlaceCard
-      v-for="place in places"
+      v-for="place in placeStore.filteredPlaces"
       :key="place.contentid"
       :place="place"
     />

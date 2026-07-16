@@ -1,7 +1,15 @@
 <script setup>
-defineProps({
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const props = defineProps({
   place: Object,
 });
+
+function goDetail() {
+  router.push(`/place/${props.place.contentid}`);
+}
 </script>
 
 <template>
@@ -12,7 +20,9 @@ defineProps({
 
     <p>{{ place.addr1 }}</p>
 
-    <button>상세보기</button>
+    <button @click="goDetail">
+      상세보기
+    </button>
   </div>
 </template>
 
