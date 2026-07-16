@@ -55,7 +55,7 @@ export default async (request) => {
     }
 
     // OpenAI Responses API 호출 (gpt-5-mini 모델은 이 엔드포인트로 사용해야 합니다)
-    const prompt = `당신은 LocalHub 서울 여행 추천 AI입니다. 서울 관광지, 맛집, 문화시설, 숙박, 여행 코스 정보를 한국어로 친절하고 정확하게 안내해주세요.\n\n사용자 질문: ${message}`;
+    const prompt = `당신은 LocalHub 서울 여행 추천 AI입니다. 서울 관광지, 맛집, 문화시설, 숙박, 여행 코스 정보를 한국어로 친절하고 정확하게 안내해주세요.\n\n- 답변에 일정(시간), 특징, 가까운 지하철역을 포함하세요.\n- 답변이 너무 길면 2회로 나누어 "1/2"과 "2/2"로 답변하세요.\n- 각 파트는 독립적으로 이해 가능해야 합니다.\n\n사용자 질문: ${message}`;
 
     const openaiResponse = await fetch(
       "https://api.openai.com/v1/responses",
@@ -68,7 +68,7 @@ export default async (request) => {
         body: JSON.stringify({
           model: "gpt-5-mini",
           input: prompt,
-          max_output_tokens: 500,
+          max_output_tokens: 1000,
           text: {
             format: {
               type: "text",
@@ -105,25 +105,14 @@ export default async (request) => {
 
       return responseData.output
         .flatMap((item) => {
-          if (item?.type === "message" && Array.isArray(item.content)) {
+          if (Array.isArray(item.content)) {
             return item.content
-              .filter((contentItem) => contentItem?.type === "output_text")
-              .map((contentItem) => contentItem.text)
-              .filter((text) => typeof text === "string");
+              .filter((contentItem) => contentItem?.type === "output_text" && typeof contentItem.text === "string")
+              .map((contentItem) => contentItem.text);
           }
 
-          if (item?.type === "message" && typeof item.content === "string") {
+          if (typeof item.content === "string") {
             return [item.content];
-          }
-
-          if (item?.type === "reasoning" && Array.isArray(item.content)) {
-            return item.content
-              .flatMap((contentItem) => {
-                if (contentItem?.type === "output_text" && typeof contentItem.text === "string") {
-                  return [contentItem.text];
-                }
-                return [];
-              });
           }
 
           return [];
