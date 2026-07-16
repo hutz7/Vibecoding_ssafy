@@ -1,19 +1,26 @@
 <script setup>
-import { onMounted } from "vue";
-
+import { onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+import { usePlaceStore } from "@/stores/place";
 import CategoryTabs from "@/components/place/CategoryTabs.vue";
 import SearchBar from "@/components/place/SearchBar.vue";
 import PlaceList from "@/components/place/PlaceList.vue";
 
-import { usePlaceStore } from "@/stores/place";
-
 const placeStore = usePlaceStore();
+const route = useRoute();
 
-onMounted(() => {
-  placeStore.loadPlaces();
-});
+const loadCategory = () => {
+  const category = route.query.category || "tourist";
+  placeStore.loadPlaces(category);
+};
+
+onMounted(loadCategory);
+
+watch(
+  () => route.query.category,
+  loadCategory
+);
 </script>
-
 <template>
   <div class="page">
     <h1>서울 관광정보</h1>
