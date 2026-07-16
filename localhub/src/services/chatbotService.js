@@ -1,17 +1,32 @@
 export async function sendChatMessage(message) {
-  const response = await fetch('/.netlify/functions/chat', {
-    method: 'POST',
+  const requestOptions = {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ message }),
-  })
+  };
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}))
-    throw new Error(errorData.error || '챗봇 응답을 가져오지 못했습니다.')
+  const endpoints = ["/api/chat", "/.netlify/functions/chat"];
+  let lastError = null;
+
+  for (const endpoint of endpoints) {
+    try {
+      const response = await fetch(endpoint, requestOptions);
+      const data = await response.json();
+
+      console.log("OpenAI 응답 :", data, "endpoint:", endpoint);
+
+      if (!response.ok) {
+        lastError = new Error(data.error || `Request failed: ${response.status}`);
+        continue;
+      }
+
+      return data.reply;
+    } catch (err) {
+      lastError = err;
+    }
   }
 
-  const data = await response.json()
-  return data.reply
+  throw lastError || new Error("Chat request failed.");
 }
